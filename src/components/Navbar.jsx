@@ -4,24 +4,27 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScroll, setIsScroll] = useState(false);
 
-    // Fungsi untuk toggle menu
-    const handleClick = () => setIsOpen(!isOpen);
-
-    // Fungsi untuk menutup menu
+    const toggleMenu = () => setIsOpen((prev) => !prev);
     const closeMenu = () => setIsOpen(false);
 
     useEffect(() => {
         const handleScroll = () => setIsScroll(window.scrollY > 5);
-
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const menuActive = isOpen ? "left-0" : "-left-full";
-    const scrollActive = isScroll ? "bg-white shadow-lg py-2" : "py-2";
+    const menuItems = [
+        { label: "SERVICE", icon: "home-2-line" },
+        { label: "PRODUCT", icon: "information-line" },
+        { label: "ABOUT", icon: "settings-3-line" },
+        { label: "CONTACT US", icon: "image-line" },
+    ];
 
     return (
-        <div className={`navbar fixed w-full transition-all z-50 ${scrollActive}`}>
+        <div
+            className={`navbar fixed w-full transition-all z-50 py-2 ${isScroll ? "bg-white shadow-lg" : ""
+                }`}
+        >
             <div className="container mx-auto px-4">
                 <div className="navbar-box flex items-center justify-between">
                     <div className="logo">
@@ -31,26 +34,18 @@ const Navbar = () => {
                     </div>
 
                     <ul
-                        className={`flex lg:gap-12 md:static md:flex-row md:shadow-none md:bg-transparent md:w-auto md:h-full md:translate-y-0 md:text-black md:p-0 md:m-0 md:transition-none gap-8 fixed ${menuActive} top-1/2 flex-col -translate-y-1/2 px-8 py-2 rounded shadow-lg shadow-slate-300 bg-bermuda font-bold text-white transition-all`}
+                        className={`flex lg:gap-12 md:static md:flex-row md:shadow-none md:bg-transparent md:w-auto md:h-full md:translate-y-0 md:text-black md:p-0 md:m-0 md:transition-none gap-8 fixed top-1/2 flex-col -translate-y-1/2 px-8 py-2 rounded shadow-lg shadow-slate-300 bg-bermuda font-bold text-white transition-all ${isOpen ? "left-0" : "-left-full"
+                            }`}
                     >
-                        {["SERVICE", "PRODUCT", "ABOUT", "CONTACT US"].map((item, index) => (
+                        {menuItems.map((item, index) => (
                             <li key={index} className="relative flex items-center gap-2 group">
-                                <i
-                                    className={`ri-${index === 0
-                                        ? "home-2-line"
-                                        : index === 1
-                                            ? "information-line"
-                                            : index === 2
-                                                ? "settings-3-line"
-                                                : "image-line"
-                                        } text-3xl md:hidden block`}
-                                ></i>
+                                <i className={`ri-${item.icon} text-3xl md:hidden block`}></i>
                                 <a
                                     href="#"
                                     className="font-medium opacity-75 hover:opacity-100 transition-all after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-bermuda after:transition-all after:duration-300 group-hover:after:w-full"
                                     onClick={closeMenu}
                                 >
-                                    {item}
+                                    {item.label}
                                 </a>
                             </li>
                         ))}
@@ -65,7 +60,7 @@ const Navbar = () => {
                         </a>
                         <i
                             className="ri-menu-3-line text-3xl md:hidden block cursor-pointer"
-                            onClick={handleClick}
+                            onClick={toggleMenu}
                         ></i>
                     </div>
                 </div>
